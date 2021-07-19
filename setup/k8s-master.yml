@@ -1,0 +1,15 @@
+config:
+  limits.memory: 1GB
+description: Default LXD profile
+devices:
+  eth0:
+    name: eth0
+    network: lxc-bridge
+    type: nic
+  root:
+    path: /
+    pool: default
+    type: disk
+name: k8s-master
+used_by:
+- /1.0/instances/master
