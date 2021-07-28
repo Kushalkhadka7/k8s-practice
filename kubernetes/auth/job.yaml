@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: testjob
+spec:
+  completions: 2
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      containers:
+        - name: jobpod
+          image: busybox
+          command: ['echo', 'Hello oworld']
+      restartPolicy: Never

@@ -1,0 +1,6 @@
+./apps/admin/node_modules/
+./apps/manager/node_modules
+
+.vscode
+vagrant/.vagrant
+QUqq8g3sDZ

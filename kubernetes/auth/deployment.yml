@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      volumes:
+        - name: auth
+          secret:
+            secretName: auth
+      containers:
+        - name: auth-api
+          image: crkushal7/auth:1.0.2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4000
+              protocol: TCP
+          env:
+            - name: NEWNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: auth
+                  key: NEWNAME
+            - name: NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: auth
+                  key: NAME
+          volumeMounts:
+            - mountPath: /data
+              name: auth
