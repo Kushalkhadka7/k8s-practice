@@ -150,3 +150,4 @@ Create a nfs server somewhere, in this case lets say locally.
 - Use the manifies file available it repo to install the metirc server.
 - But before deploying it we need to add these 2 in container args **--kubelet-preferred-address-types=InternalIP (host name resolution) **, **--kubelet-insecure-tls (skip the tls certificate warning)**,
 - **kubectl to nodes** now we will be able to see the metrics.
+- For simplicity we can use helm to install the mertic server.
