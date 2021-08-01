@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: auth
 spec:
-  replicas: 4
+  replicas: 3
   selector:
     matchLabels:
       app: auth
@@ -20,6 +20,11 @@ spec:
         - name: auth-api
           image: crkushal7/auth:1.0.2
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: '1000m'
+            requests:
+              cpu: '1000m'
           ports:
             - containerPort: 4000
               protocol: TCP
