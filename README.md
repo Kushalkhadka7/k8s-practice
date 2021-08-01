@@ -95,3 +95,58 @@ corn jobs:
   useCases:
   - generally used for automated tasks
   - eg. sending email, db backup
+
+<!-- Dynamic NFS porvising -->
+
+Create a nfs server somewhere, in this case lets say locally.
+
+- create a directory
+- change ownership of the directory to nobody
+- install and enable the nfs-server
+- expose the directoyr
+- edit /ets/exports and paste **srv/nfs/kubedata \*(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)**
+- export the directory **sudo exportfs -rav**
+- **sudo exportfs -v** show all the exports
+- login to the worker nodes and mount the volume **mount -t nfs 192.168.1.78:/srv/nfs/kubedata /mnt**
+-
+
+<!-- Stateful sets -->
+
+- Are used while deploying the applicatins that have state like database, or some app that needs to save data.
+- It deploys the replicas in order like R0,R1,R2 and so on.
+- we need headless service to allow the statefulsets to communicate with one another.
+- Each replica have their own PV, and even after restating the pod they remember the PV they have used.
+- Pod can be accssed by <headless_serice_name>.<pod_name>.
+- Everything happens in order, creation and even deletion and also rolling update.
+- Ordered provisiong, deletion and rolling update.
+
+<!-- One way to use Satefulset -->
+
+- Manual provisiong.
+- Create the PV for each replicas of statefulset that we want to create.
+- Create storage class.
+- Once creating the Statefulset use the PresisetntVolumeClaimTemplete there.
+
+<!-- One way to use Satefulset -->
+
+- Dymanic provisiong.
+- Create dymanic nfs provisioning.
+- Create storage class.
+- Create PVC.
+- Once creating the Statefulset use the PresisetntVolumeClaimTemplete from already created PVC.
+- This will automatically create the PV.
+
+- Headless service is mandatory.
+- If we want to access the statefulset applicaion from outside we need to create a seperate service.
+
+- While deleting the statefulset, some of the pods may not be deleted, so the preferred way to delete the stateful set is to scale down the statefulset to 0.
+- We need to delete pvc and pv manually once we delete the statefulset.
+
+<!-- Deploying metirc server. -->
+
+- We need metric server to collect the pods and nodes metics.
+- These values are used to logging, visualizing the facts, scaling the pods or replicas base on the metrics.
+- Can be done usning helm or by using the mainifest files in the metric server repo.
+- Use the manifies file available it repo to install the metirc server.
+- But before deploying it we need to add these 2 in container args **--kubelet-preferred-address-types=InternalIP (host name resolution) **, **--kubelet-insecure-tls (skip the tls certificate warning)**,
+- **kubectl to nodes** now we will be able to see the metrics.

@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sts-nginx
+  labels:
+    app: sts-nginx
+spec:
+  ports:
+    - port: 80
+      name: web
+  clusterIP: None
+  selector:
+    app: sts-nginx
+
+# Stateful set
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sts-nginx
+spec:
+  serviceName: 'sts-nginx'
+  replicas: 2
+  #podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: sts-nginx
+  template:
+    metadata:
+      labels:
+        app: sts-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - name: www
+              mountPath: /var/www/
+  volumeClaimTemplates:
+    - metadata:
+        name: www
+      spec:
+        storageClassName: manual
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
