@@ -151,3 +151,21 @@ Create a nfs server somewhere, in this case lets say locally.
 - But before deploying it we need to add these 2 in container args **--kubelet-preferred-address-types=InternalIP (host name resolution) **, **--kubelet-insecure-tls (skip the tls certificate warning)**,
 - **kubectl to nodes** now we will be able to see the metrics.
 - For simplicity we can use helm to install the mertic server.
+- **kubectl top nodes** to see the metrics.
+- Collect metrics of all nodes and all pods.
+
+All of the above can be done by using **heapster** also.
+Functionality of **heapster or metric server** is same. (but heapster is deprecated.)
+
+<!-- Horizontal pod auto scaling -->
+
+- Deploy metric server to check the metices.
+- User resources request in deployment files.
+- We need to give the cooling period.
+- (if one replica is created it will create the cooling time period to create next replics.It doesn't immediately scale up or down immediately. It scales up, wait for the cooling time and the scale up again, same for the scale down also.)
+- we can deploy **HPA** by using manifest files or as command also.
+- We need to provide the deployment in which the HPA should work.
+- After that give the metric threshold, after exceeding which it should replicate.
+- Run by commnad example **kubectl autosacle deploy <deployment_name> --min <min> --max<max> --<metric_type> <metric_value>**
+- eg **kubectl autoscale deploy nginx --min 2 --max 5 --cpu-percent 20**, scales up when cpu usage exceeds 20% for deployment name nginx.
+- For this to work we need to specify resource limit in the deployment file, otherwise it won't work.
